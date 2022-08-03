@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的微博发布</title>
+    <script src="./jquery-3.5.1.min.js"></script>
+    <style>
+        *{margin: 0;padding: 0;border: 0;list-style: none;}
+        body{background: #efefef;}
+        section{overflow: hidden;width: 800px;padding: 10px;background: #fff;margin: 100px auto 20px;}
+        h4{color: #426c81;font-weight: normal;}
+        textarea{width: 100%;resize: none;border: 1px solid #ccc;outline: none;margin-top: 10px;margin-bottom: 10px;height: 70px;}
+        div{width: 90px;height: 30px;line-height: 30px;text-align: center;background: #ff8140;color: #fff;border-radius: 6px;float: right;opacity: 0.8;cursor: not-allowed;}
+        ul{width: 800px;padding: 10px;background: #fff;margin: 0 auto;overflow: hidden;}
+        li{border-bottom: 1px dashed #ccc;line-height: 30px;height: 30px;margin-top: 5px;display: flex;justify-content: space-between;align-items: center;padding: 0 10px;width: 100%;box-sizing: border-box;}
+        p{width: 95%;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
+        span{cursor: pointer;width: 20px;height: 20px;text-align: center;line-height: 20px;background: #ccc;border-radius: 3px;}
+        textarea.active{border-color: #ff8140;}
+        div.active{opacity: 1;cursor: pointer;}
+    </style>
+</head>
+<body>
+    <section>
+        <h4>有什么新鲜事想告诉大家?</h4>
+        <textarea></textarea>
+        <div>发布</div>
+    </section>
+    <ul>
+        <!-- <li>
+            <p></p>
+            <span>x</span>
+        </li> -->
+    </ul>
+    <script>
+        // 聚焦失焦 
+        $("textarea").focus(function(){
+            $(this).addClass("active")
+            
+        })
+
+        // 封装函数  判断按钮状态
+        function jc(){
+            var aa =$("textarea").val().trim()
+            if(aa){
+                $("div").addClass("active")
+            }
+        }
+
+        // 封装输入文字函数
+
+        function sr() {
+                // 获取输入的值 val  keyup
+        var aa =$("textarea").val().trim()
+            // console.log($(this).val().trim());
+            // console.log(aa);
+
+            // 不为空就加li节点
+            if(aa ){
+               
+                $("ul").prepend("<li><p>"+aa+"</p><span>x</span></li>").children("li").eq(0).hide().slideDown(500)
+              
+                $("div").removeClass("active")
+            }else{
+                
+                 // 判空  如果为空 发布按钮不好用
+                alert("请重新输入,不允许输入空内容!!")
+             
+                return;
+                //   console.log(662);
+            }
+
+                // 发布后清空
+                $("textarea").val("") ;       
+        }
+
+       
+
+          //发布后 失焦  
+          $("textarea").blur(function(){
+                    $(this).removeClass("active")
+        })
+
+        // 设置点击div事件
+        $("div").click(function(){
+            // console.log(11);
+             sr()     
+        })
+
+        // 回车提交
+        // 键盘抬起事件   让回车也好用 能直接加个li
+			$('textarea').keyup(function(e){
+				
+				e  =e ||  window.event;
+				// 当按回车键的时候，获取对应的文本内容
+				
+                jc();
+				if(e.keyCode == 13){
+					// 证明按下的是回车键
+					// console.log( $(this).val().trim() );
+                    sr()
+				}
+        
+            })
+
+        // 使用事件委托实现删除
+        $("ul").on("click","li",function(){
+            // console.log(11);
+            // console.log(this);
+            $(this).animate({marginLeft: '-1200px'},500).slideUp(500,function(){
+                $(this).remove()
+            })
+        })
+    </script>
+    
+</body>
+</html>
+
+<!-- 1.  给文本域添加 获取焦点和失去焦点的事件，处理边框样式
+2. 文本域添加keyup事件，获取里面的内容，处理空格， 判断是否为空，如果为空，发布按钮还是不能点击，如果不为空，则可以点击发布按钮（将文本域的内容插入到下面的ul中）；
+3. 监听keyCode 是否为13，如果是13，则执行发布（将文本域的内容插入到下面的ul中）
+4.使用事件委托，实现删除操作； -->
